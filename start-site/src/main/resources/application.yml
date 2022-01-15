@@ -1,7 +1,22 @@
+server:
+  port: 8821
+  compression:
+    enabled: true
+    mime-types: application/json,text/css,text/html
+    min-response-size: 2048
+  error:
+    include-message: always
+  forward-headers-strategy: native
+
+## 日志输出
 logging:
+  file:
+    name: ./logs/${spring.application.name}.log
   level:
+    org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor: trace
     org.springframework.core.env: warn
     org.springframework.jndi: warn
+
 
 management:
   endpoints:
@@ -11,16 +26,10 @@ management:
           - health
           - info
 
-server:
-  compression:
-    enabled: true
-    mime-types: application/json,text/css,text/html
-    min-response-size: 2048
-  error:
-    include-message: always
-  forward-headers-strategy: native
 
 spring:
+  application:
+    name: easy-initializr
   jackson:
     serialization:
       write-dates-as-timestamps: false
@@ -34,7 +43,16 @@ spring:
 
 initializr:
   env:
+    spring-boot-metadata-url: # 元数据获取地址默认指向是spring.io官网，这里配置为空，使用本地配置的元数据
     boms:
+      # easy框架
+      easy-framework:
+        groupId: org.easy.framework
+        artifactId: easy-dependencies
+        versionProperty: easy.version
+        mappings:
+          - compatibilityRange: "[2.2.6.RELEASE,2.3.12.RELEASE)"
+            version: 1.0.1
       azure:
         groupId: com.azure.spring
         artifactId: azure-spring-boot-bom
@@ -314,36 +332,36 @@ initializr:
           id: web-services
           description: Facilitates contract-first SOAP development. Allows for the creation of flexible web services using one of the many ways to manipulate XML payloads.
           aliases:
-           - ws
+            - ws
           links:
-           - rel: guide
-             href: https://spring.io/guides/gs/producing-web-service/
-             description: Producing a SOAP web service
-           - rel: reference
-             href: https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-webservices
+            - rel: guide
+              href: https://spring.io/guides/gs/producing-web-service/
+              description: Producing a SOAP web service
+            - rel: reference
+              href: https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-webservices
         - name: Jersey
           id: jersey
           description: Framework for developing RESTful Web Services in Java that provides support for JAX-RS APIs.
           facets:
-           - json
+            - json
           links:
-           - rel: reference
-             href: https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jersey
+            - rel: reference
+              href: https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jersey
         - name: Vaadin
           id: vaadin
           facets:
-           - web
+            - web
           groupId: com.vaadin
           artifactId: vaadin-spring-boot-starter
           description: A web framework that allows you to write UI in pure Java without getting bogged down in JS, HTML, and CSS.
           bom: vaadin
           compatibilityRange: "[2.0.0.RELEASE,2.6.0-M1)"
           links:
-           - rel: guide
-             href: https://spring.io/guides/gs/crud-with-vaadin/
-             description: Creating CRUD UI with Vaadin
-           - rel: reference
-             href: https://vaadin.com/spring
+            - rel: guide
+              href: https://spring.io/guides/gs/crud-with-vaadin/
+              description: Creating CRUD UI with Vaadin
+            - rel: reference
+              href: https://vaadin.com/spring
     - name: Template Engines
       content:
         - name: Thymeleaf
@@ -1561,6 +1579,58 @@ initializr:
             - rel: guide
               href: https://github.com/alibaba/spring-cloud-alibaba/tree/master/spring-cloud-alibaba-examples/sentinel-example/sentinel-core-example
               description: Sentinel Example
+    - name: Easy Framework
+      bom: easy-framework
+      compatibilityRange: "[2.2.6.RELEASE,2.3.12.RELEASE)"
+      content:
+        - name: Easy Web
+          id: easy-boot-web
+          description: Web开发基础依赖
+          groupId: org.easy.framework
+          artifactId: easy-spring-boot-starter-web
+          links:
+            - rel: reference
+              href: https://app.easy.org/easy/#/easy-spring-boot/web
+            - rel: guide
+              href: https://app.easy.org/easy/#/quickstart
+              description: web开发基础依赖
+        - name: Easy Common
+          id: easy-boot-common
+          description: 通用工具包
+          groupId: org.easy.framework
+          artifactId: easy-spring-boot-starter-common
+        - name: Easy Redis
+          id: easy-boot-redis
+          description: redis客户端组件
+          groupId: org.easy.framework
+          artifactId: easy-spring-boot-starter-redis
+        - name: Easy Emqx
+          id: easy-boot-emqx
+          description: emqx客户端组件
+          groupId: org.easy.framework
+          artifactId: easy-spring-boot-starter-emqx
+        - name: Easy Datasource
+          id: easy-boot-datasource
+          description: 数据源组件
+          groupId: org.easy.framework
+          artifactId: easy-spring-boot-starter-datasource
+        - name: Easy Http
+          id: easy-boot-http
+          description: restTemplate包装
+          groupId: org.easy.framework
+          artifactId: easy-spring-boot-starter-http
+        - name: Easy Distribute Lock
+          id: easy-cloud-lock
+          description: 分布式锁
+          groupId: org.easy.framework
+          artifactId: easy-spring-cloud-starter-lock
+          starter: false
+        - name: Easy Snowflake
+          id: easy-cloud-snowflake
+          description: 分布式ID生成工具，基于雪花算法
+          groupId: org.easy.framework
+          artifactId: easy-spring-cloud-starter-snowflake
+          starter: false
   types:
     - name: Maven Project
       id: maven-project
@@ -1605,10 +1675,10 @@ initializr:
     - id: 16
       default: false
     - id: 11
-      default: true
+      default: false
     - id: 1.8
       name: 8
-      default: false
+      default: true
   languages:
     - name: Java
       id: java
@@ -1620,13 +1690,21 @@ initializr:
       id: groovy
       default: false
   bootVersions:
-    - name : Latest SNAPSHOT
-      id: 2.2.0.BUILD-SNAPSHOT
+    - name: 2.5.2
+      id: 2.5.2
       default: false
-    - name : 2.1.1.
-      id: 2.1.1.RELEASE
+    - name: 2.4.8
+      id: 2.4.8
+      default: false
+    - name: 2.3.12.RELEASE
+      id: 2.3.12.RELEASE
+      default: false
+    - name: 2.2.13.RELEASE
+      id: 2.2.13.RELEASE
+      default: false
+    - name: 2.2.6.RELEASE
+      id: 2.2.6.RELEASE
       default: true
-
 ---
 
 spring:
