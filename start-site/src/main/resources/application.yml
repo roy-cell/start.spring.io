@@ -51,7 +51,7 @@ initializr:
         artifactId: easy-dependencies
         versionProperty: easy.version
         mappings:
-          - compatibilityRange: "[2.2.6.RELEASE,2.3.12.RELEASE)"
+          - compatibilityRange: "[2.2.13.RELEASE,2.4.0.RELEASE)"
             version: 1.0.1
       azure:
         groupId: com.azure.spring
@@ -1581,7 +1581,7 @@ initializr:
               description: Sentinel Example
     - name: Easy Framework
       bom: easy-framework
-      compatibilityRange: "[2.2.6.RELEASE,2.3.12.RELEASE)"
+      compatibilityRange: "[2.2.13.RELEASE,2.4.0.RELEASE)"
       content:
         - name: Easy Web
           id: easy-boot-web
@@ -1698,13 +1698,11 @@ initializr:
       default: false
     - name: 2.3.12.RELEASE
       id: 2.3.12.RELEASE
-      default: false
+      default: true
     - name: 2.2.13.RELEASE
       id: 2.2.13.RELEASE
       default: false
-    - name: 2.2.6.RELEASE
-      id: 2.2.6.RELEASE
-      default: true
+
 ---
 
 spring:
